@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  uid       String    @unique
+  password  String?
+  isAdmin   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Ticket    Ticket[]
+  Reiceive  Ticket[]  @relation("assignee")
+}
+
+model Ticket {
+  id          String    @id @default(uuid())
+  deviceType  String
+  content     String
+  contact     String
+  finished    Boolean   @default(false)
+  evaluation  Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  Requestor   User?     @relation(fields: [requestorId], references: [id])
+  requestorId String?
+  Assignee    User[]    @relation("assignee")
+}
