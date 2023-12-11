@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma'
 import { z } from 'zod'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
+import { pushMessage } from '@/lib/actions'
 
 const schema = z.object({
   deviceType: z.enum(['desktop', 'laptop', 'other']),
@@ -28,11 +29,24 @@ export default async function Page() {
       data: validatedFields.data,
     })
 
-    !!authData?.user &&
-      (await prisma.ticket.update({
+    if (!!authData?.user) {
+      await prisma.ticket.update({
         where: { id: result.id },
         data: { requestorId: authData?.user.id },
-      }))
+      })
+      await pushMessage({
+        content: `收到您的报修，报修ID: ${result.id}`,
+        summary: `报修成功`,
+        uid: authData?.user.id,
+      })
+    }
+
+    await pushMessage({
+      content: `有新的报修，报修ID: ${result.id}`,
+      summary: `新的报修`,
+      topic: true,
+    })
+
     redirect(`query/${result.id}`)
   }
 

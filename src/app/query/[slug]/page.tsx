@@ -1,4 +1,5 @@
 import { auth } from '@/auth'
+import { pushMessage } from '@/lib/actions'
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { notFound, redirect } from 'next/navigation'
@@ -113,6 +114,7 @@ export default async function Home({ params }: { params: { slug: string } }) {
           <form
             action={async () => {
               'use server'
+              // TODO: one time only
               await prisma.ticket.update({
                 where: {
                   id: ticket.id,
@@ -124,6 +126,11 @@ export default async function Home({ params }: { params: { slug: string } }) {
                     },
                   },
                 },
+              })
+              await pushMessage({
+                content: `你接了一单报修，报修ID:${ticket.id}`,
+                summary: '接单成功',
+                uid: authData?.user?.id,
               })
               revalidatePath(`/query/${ticket.id}`)
             }}
