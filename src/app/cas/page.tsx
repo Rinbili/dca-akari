@@ -8,7 +8,7 @@ export default async function Home({
   searchParams: { [key: string]: string }
 }) {
   const callbackUrl =
-    searchParams['callbackUrl'] || `${process.env.URL}${process.env.BASE_PATH}/`
+    searchParams['callbackUrl'] || `${process.env.URL}${process.env.BASE_PATH}/profile`
   const authData = await auth()
   !!authData?.user && redirect(callbackUrl)
 
