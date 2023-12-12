@@ -138,6 +138,29 @@ export default async function Home({ params }: { params: { slug: string } }) {
             <button className='btn btn-primary w-full'>接单</button>
           </form>
         )}
+        {!!authData?.user?.isAdmin && !ticket.finished && (
+          <form
+            action={async () => {
+              'use server'
+              await prisma.ticket.update({
+                where: {
+                  id: ticket.id,
+                },
+                data: {
+                  finished: true,
+                },
+              })
+              await pushMessage({
+                content: `你完成了一单报修，报修ID:${ticket.id}`,
+                summary: '完成报修',
+                uid: authData?.user?.id,
+              })
+              revalidatePath(`/query/${ticket.id}`)
+            }}
+          >
+            <button className='btn btn-primary w-full'>完成报修</button>
+          </form>
+        )}
       </div>
     </div>
   )
