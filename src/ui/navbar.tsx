@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { auth, signOut } from '@/auth'
+import { redirect } from 'next/navigation'
 
 export default async function Nav() {
   const authData = await auth()
@@ -38,7 +39,7 @@ export default async function Nav() {
             <form
               action={async () => {
                 'use server'
-                await signOut()
+                await signOut(redirect('/'))
               }}
             >
               <li>
