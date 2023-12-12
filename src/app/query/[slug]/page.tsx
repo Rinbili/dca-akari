@@ -135,9 +135,10 @@ export default async function Home({ params }: { params: { slug: string } }) {
               revalidatePath(`/query/${ticket.id}`)
             }}
           >
-            <button className='btn btn-primary w-full'>接单</button>
+            <button className='btn btn-accent w-full'>接单</button>
           </form>
         )}
+        <div className='divider'></div>
         {!!authData?.user?.isAdmin && !ticket.finished && (
           <form
             action={async () => {
