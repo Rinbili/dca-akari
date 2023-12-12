@@ -123,3 +123,24 @@ export async function pushMessage({
     body: JSON.stringify(postData),
   })
 }
+
+export async function getQRCodeUrl(id: string) {
+  const res = await fetch(
+    `https://wxpusher.zjiecode.com/api/fun/create/qrcode`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        appToken: process.env.WXPUSHER_APP_TOKEN,
+        extra: id,
+      }),
+    }
+  )
+  const { msg, data, success } = await res.json()
+  if (!success) {
+    return 'https://http.cat/images/404.jpg'
+  }
+  return data.url
+}
