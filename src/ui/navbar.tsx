@@ -39,11 +39,14 @@ export default async function Nav() {
             <form
               action={async () => {
                 'use server'
-                await signOut(redirect('/'))
+                await signOut({ redirectTo: process.env.BASE_PATH })
               }}
             >
               <li>
-                <button className='min-w'>登出</button>
+                <Link href='/profile'>
+                  <button className='min-w'>个人资料</button>
+                </Link>
+                <button className='min-w'>登出系统</button>
               </li>
             </form>
           </ul>
@@ -51,7 +54,7 @@ export default async function Nav() {
       ) : (
         <ul
           tabIndex={0}
-          className='mt-3 z-[100] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52'
+          className='mt-3 z-[100] p-2 shadow menu menu-xs dropdown-content bg-base-100 rounded-box w-52'
         >
           <li>
             <Link href={`/cas`}>中央认证登陆(仅限校园网)</Link>

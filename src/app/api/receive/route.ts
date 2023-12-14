@@ -2,8 +2,6 @@ import prisma from '@/lib/prisma'
 export const dynamic = 'force-dynamic' // defaults to force-static
 export async function POST(request: Request) {
   const { action, data } = await request.json()
-  console.log(!!data.extra)
-  console.log(!!data.uid)
 
   switch (action) {
     case 'app_subscribe':
