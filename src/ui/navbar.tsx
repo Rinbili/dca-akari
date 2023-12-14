@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 export default async function Nav() {
   const authData = await auth()
   return (
-    <div className='navbar bg-base-100'>
+    <div className='navbar bg-base-100 fixed'>
       <div className='flex-1'>
         <Link href={`/`} className='btn btn-ghost text-xl'>
           akari

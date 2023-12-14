@@ -21,16 +21,15 @@ export default function Search() {
   return (
     <div>
       <label className='label'>
-        <span className='label-text'>报修ID</span>
+        <input
+          className='input input-bordered w-full'
+          placeholder={`请输入关键字`}
+          onChange={(e) => {
+            handleSearch(e.target.value)
+          }}
+          defaultValue={searchParams.get('query')?.toString()}
+        />
       </label>
-      <input
-        className='input input-bordered w-full'
-        placeholder={`请输入`}
-        onChange={(e) => {
-          handleSearch(e.target.value)
-        }}
-        defaultValue={searchParams.get('query')?.toString()}
-      />
     </div>
   )
 }

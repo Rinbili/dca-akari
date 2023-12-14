@@ -4,10 +4,12 @@ import prisma from './prisma'
 
 const ITEMS_PER_PAGE = 10
 
-export async function getTickets(query: string) {
+export async function getTickets(query: string, page: number) {
   const authData = await auth()
   const filter: Prisma.TicketFindManyArgs = !!authData?.user?.isAdmin
     ? {
+        take: ITEMS_PER_PAGE,
+        skip: (page - 1) * ITEMS_PER_PAGE,
         where: {
           OR: [
             { id: { contains: query } },
@@ -17,6 +19,8 @@ export async function getTickets(query: string) {
         },
       }
     : {
+        take: ITEMS_PER_PAGE,
+        skip: (page - 1) * ITEMS_PER_PAGE,
         where: {
           OR: [
             {
@@ -75,8 +79,7 @@ export async function getTicketPages(query: string) {
         },
       }
   const count = await prisma.ticket.count(filter)
-  const pages = Math.ceil(count / ITEMS_PER_PAGE)
-  return pages
+  return Math.ceil(count / ITEMS_PER_PAGE)
 }
 
 export async function pushMessage({

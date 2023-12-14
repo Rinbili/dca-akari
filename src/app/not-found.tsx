@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 
 export default async function NotFound() {
   return (
-    <main className='flex h-full flex-col items-center justify-center gap-2'>
+    <div className='flex h-full flex-col items-center justify-center gap-2'>
       <img src='https://http.cat/images/404.jpg' alt='404' />
       <h2 className='text-xl font-semibold'>页面不存在</h2>
       <form
@@ -17,6 +17,6 @@ export default async function NotFound() {
           回首页
         </Link>
       </form>
-    </main>
+    </div>
   )
 }

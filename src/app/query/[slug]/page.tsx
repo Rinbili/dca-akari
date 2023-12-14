@@ -21,7 +21,9 @@ export default async function Home({ params }: { params: { slug: string } }) {
     <div className='p-4 md:mx-24'>
       <ul className='steps w-full'>
         <li className='step step-accent'>提交报修</li>
-        <li className={`step ${ticket.Assignee && 'step-accent'}`}>干事接单</li>
+        <li className={`step ${ticket.Assignee.length !== 0 && 'step-accent'}`}>
+          干事接单
+        </li>
         <li className={`step ${ticket.finished && 'step-accent'}`}>完成维修</li>
         <li className={`step ${ticket.evaluation && 'step-accent'}`}>
           用户评价
@@ -110,35 +112,39 @@ export default async function Home({ params }: { params: { slug: string } }) {
           )}
         </label>
         <div className='divider'></div>
-        {!!authData?.user?.isAdmin && !ticket.finished && (
-          <form
-            action={async () => {
-              'use server'
-              // TODO: one time only
-              await prisma.ticket.update({
-                where: {
-                  id: ticket.id,
-                },
-                data: {
-                  Assignee: {
-                    connect: {
-                      id: authData?.user?.id,
+        {!!authData?.user?.isAdmin &&
+          ticket.Assignee.length !== 0 &&
+          !ticket.finished && (
+            <>
+              <form
+                action={async () => {
+                  'use server'
+                  // TODO: one time only
+                  await prisma.ticket.update({
+                    where: {
+                      id: ticket.id,
                     },
-                  },
-                },
-              })
-              await pushMessage({
-                content: `你接了一单报修，报修ID:${ticket.id}`,
-                summary: '接单成功',
-                uid: authData?.user?.id,
-              })
-              revalidatePath(`/query/${ticket.id}`)
-            }}
-          >
-            <button className='btn btn-accent w-full'>接单</button>
-          </form>
-        )}
-        <div className='divider'></div>
+                    data: {
+                      Assignee: {
+                        connect: {
+                          id: authData?.user?.id,
+                        },
+                      },
+                    },
+                  })
+                  await pushMessage({
+                    content: `你接了一单报修，报修ID:${ticket.id}`,
+                    summary: '接单成功',
+                    uid: authData?.user?.id,
+                  })
+                  revalidatePath(`/query/${ticket.id}`)
+                }}
+              >
+                <button className='btn btn-accent w-full'>接单</button>
+              </form>
+              <div className='divider'></div>
+            </>
+          )}
         {!!authData?.user?.isAdmin && !ticket.finished && (
           <form
             action={async () => {
