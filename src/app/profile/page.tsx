@@ -1,18 +1,16 @@
-import { auth } from '@/auth'
-import { getQRCodeUrl } from '@/lib/actions'
-import prisma from '@/lib/prisma'
-import { revalidatePath } from 'next/cache'
-import Image from 'next/image'
-import { redirect } from 'next/navigation'
+import { auth } from '@/auth';
+import { getQRCodeUrl } from '@/lib/actions';
+import prisma from '@/lib/prisma';
+import { redirect } from 'next/navigation';
 
 export default async function Page() {
-  const authData = await auth()
+  const authData = await auth();
   const user = await prisma.user.findUnique({
     where: {
       id: authData?.user.id,
     },
-  })
-  const qrcodeUrl = user && (await getQRCodeUrl(user.id))
+  });
+  const qrcodeUrl = user && (await getQRCodeUrl(user.id));
 
   return (
     <div className='p-4 md:mx-24'>
@@ -39,8 +37,8 @@ export default async function Page() {
       )}
       <form
         action={async (formData: FormData) => {
-          'use server'
-          const pushId = formData.get('pushId')
+          'use server';
+          const pushId = formData.get('pushId');
           await prisma.user.update({
             where: {
               id: user?.id,
@@ -48,8 +46,8 @@ export default async function Page() {
             data: {
               pushUid: pushId?.toString(),
             },
-          })
-          redirect('/profile')
+          });
+          redirect('/profile');
         }}
         className='form-control'
       >
@@ -76,5 +74,5 @@ export default async function Page() {
         <button className='btn btn-primary'>保存</button>
       </form>
     </div>
-  )
+  );
 }

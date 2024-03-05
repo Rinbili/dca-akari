@@ -1,24 +1,24 @@
-import { auth } from '@/auth'
-import { getTicketPages, getTickets } from '@/lib/actions'
-import Pagination from '@/ui/pagination'
-import Search from '@/ui/search'
-import Link from 'next/link'
+import { auth } from '@/auth';
+import { getTicketPages, getTickets } from '@/lib/actions';
+import Pagination from '@/ui/pagination';
+import Search from '@/ui/search';
+import Link from 'next/link';
 
 export default async function Page({
   searchParams,
 }: {
   searchParams?: {
-    query?: string
-    page?: string
-  }
+    query?: string;
+    page?: string;
+  };
 }) {
-  const authData = await auth()
-  const query = searchParams?.query || ''
+  const authData = await auth();
+  const query = searchParams?.query || '';
   const invoices = await getTickets(
     query,
-    isNaN(Number(searchParams?.page)) ? 1 : Number(searchParams?.page)
-  )
-  const totalPages = await getTicketPages(query)
+    isNaN(Number(searchParams?.page)) ? 1 : Number(searchParams?.page),
+  );
+  const totalPages = await getTicketPages(query);
 
   return (
     <div className='p-4 md:mx-24'>
@@ -68,5 +68,5 @@ export default async function Page({
         </div>
       </div>
     </div>
-  )
+  );
 }

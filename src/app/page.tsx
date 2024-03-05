@@ -1,12 +1,6 @@
-import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import Link from 'next/link';
 
 export default async function Home() {
-  async function handleSubmit(formData: FormData) {
-    'use server'
-    const id = (formData.get('id') as string) || ''
-    redirect(`/query/${id}`)
-  }
   return (
     <div className='m-4 grid grid-cols-1 md:grid-cols-2 justify-items-center gap-12'>
       <div className='card w-full bg-base-100 shadow-xl image-full'>
@@ -63,5 +57,5 @@ export default async function Home() {
       </div>
       <input type='checkbox' id='search_modal' className='modal-toggle' />
     </div>
-  )
+  );
 }

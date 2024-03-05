@@ -1,10 +1,10 @@
-import { auth } from '@/auth'
-import { pushMessage } from '@/lib/actions'
-import prisma from '@/lib/prisma'
-import { revalidatePath } from 'next/cache'
-import { notFound, redirect } from 'next/navigation'
+import { auth } from '@/auth';
+import { pushMessage } from '@/lib/actions';
+import prisma from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
+import { notFound, redirect } from 'next/navigation';
 export default async function Home({ params }: { params: { slug: string } }) {
-  const authData = await auth()
+  const authData = await auth();
 
   const ticket = await prisma.ticket.findUnique({
     where: {
@@ -13,9 +13,9 @@ export default async function Home({ params }: { params: { slug: string } }) {
     include: {
       Assignee: true,
     },
-  })
+  });
   if (!ticket) {
-    redirect('/query?notFound=true')
+    redirect('/query?notFound=true');
   }
   return (
     <div className='p-4 md:mx-24'>
@@ -118,7 +118,7 @@ export default async function Home({ params }: { params: { slug: string } }) {
             <>
               <form
                 action={async () => {
-                  'use server'
+                  'use server';
                   // TODO: one time only
                   await prisma.ticket.update({
                     where: {
@@ -131,13 +131,13 @@ export default async function Home({ params }: { params: { slug: string } }) {
                         },
                       },
                     },
-                  })
+                  });
                   await pushMessage({
                     content: `你接了一单报修，报修ID:${ticket.id}`,
                     summary: '接单成功',
                     uid: authData?.user?.id,
-                  })
-                  revalidatePath(`/query/${ticket.id}`)
+                  });
+                  revalidatePath(`/query/${ticket.id}`);
                 }}
               >
                 <button className='btn btn-accent w-full'>接单</button>
@@ -148,7 +148,7 @@ export default async function Home({ params }: { params: { slug: string } }) {
         {!!authData?.user?.isAdmin && !ticket.finished && (
           <form
             action={async () => {
-              'use server'
+              'use server';
               await prisma.ticket.update({
                 where: {
                   id: ticket.id,
@@ -156,13 +156,13 @@ export default async function Home({ params }: { params: { slug: string } }) {
                 data: {
                   finished: true,
                 },
-              })
+              });
               await pushMessage({
                 content: `你完成了一单报修，报修ID:${ticket.id}`,
                 summary: '完成报修',
                 uid: authData?.user?.id,
-              })
-              revalidatePath(`/query/${ticket.id}`)
+              });
+              revalidatePath(`/query/${ticket.id}`);
             }}
           >
             <button className='btn btn-primary w-full'>完成报修</button>
@@ -170,5 +170,5 @@ export default async function Home({ params }: { params: { slug: string } }) {
         )}
       </div>
     </div>
-  )
+  );
 }
